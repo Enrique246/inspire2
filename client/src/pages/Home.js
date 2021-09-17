@@ -18,11 +18,8 @@ function Home() {
       <div>
         <div>
           <PostForm />
-          <div className="page-title">
-            <h3>Recent Posts:</h3>
-          </div>
         </div>
-        {loading ? (
+        {/* {loading ? (
           <h1>Loading posts..</h1>
         ) : (
           <Transition.Group>
@@ -33,7 +30,7 @@ function Home() {
                 </div>
               ))}
           </Transition.Group>
-        )}
+        )} */}
       </div>
     </div>
   );

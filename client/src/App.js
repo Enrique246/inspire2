@@ -16,7 +16,6 @@ import MarketPlace from "./pages/marketPlace";
 import Success from "./pages/success";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 // import SinglePost from './pages/SinglePost';
 
@@ -50,7 +49,6 @@ function App() {
             {/* <Route exact path='/success' component={Success} /> */}
             {/* <Route exact path='/orderHistory' component={OrderHistory} />
               <Route exact path='/products/:id' component={Detail} /> */}
-            <Route exact path="/profile" component={Profile} />
             <Route exact path="/" component={Login} />
             {/* <Route component={NoMatch} /> */}
             <CartProvider>

@@ -43,11 +43,6 @@ function Navbar() {
               </Link>
             </li>
             <li>
-              <Link style={{ ...styles }} to="/profile">
-                Profile
-              </Link>
-            </li>
-            <li>
               <Link style={{ ...styles }} to="/signup">
                 Sign in
               </Link>

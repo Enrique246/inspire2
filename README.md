@@ -23,8 +23,8 @@ To install the necessary packages, open the terminal and run `npm install`. To d
 * Users can purchase items in cart using stripe.
 ## Deployment
 <!-- Agregar heroku -->
-* [Deployed App](https://quiet-cliffs-65370.herokuapp.com/)
-* [Github Repository](https://github.com/stamm2911/Inspire)
+* [Deployed App](https://aqueous-temple-69874.herokuapp.com/)
+* [Github Repository](https://github.com/Enrique246/inspire2)
 
 ## Technologies
 * [MongoDB](https://www.mongodb.com/) is a source-available cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with optional schemas.

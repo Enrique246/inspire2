@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/inspire',
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/inspire2',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,

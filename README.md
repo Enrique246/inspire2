@@ -1,6 +1,6 @@
 # Inspire
 ## Description
-Inspire is a social network that allows users to post, see other users' posts, and buy items in the marketplace. This app allows users to post what they are doing or what's on their mind with text-only in a quick and simple way. Users are also able to enter the marketplace, browse available items and purchase what they want. This application is integrated in [Stripe](https://stripe.com/) for easy payment.
+Inspire is a social network that allows users to create, browse products, and buy items in the marketplace. This app allows users to post new products in a quick and simple way. Users are also able to enter the marketplace, browse available items and purchase what they want. This application is integrated in [Stripe](https://stripe.com/) for easy payment.
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
@@ -16,9 +16,8 @@ To install the necessary packages, open the terminal and run `npm install`. To d
 ## Usage  
 * This app can be accessed from any browser on computer, ipad, or mobile phone.
 * Users can login or signup.
-* Users can create text-only posts.
-* Users can view other users' post.
 * Users can visit and browse the marketplace.
+* Users can create new products.
 * Users can add items to their cart.
 * Users can purchase items in cart using stripe.
 ## Deployment
@@ -38,10 +37,8 @@ To install the necessary packages, open the terminal and run `npm install`. To d
 * [Heroku](https://www.heroku.com/) is a platform as a service (PaaS) that enables developers to build, run, and operate applications entirely in the cloud.
 
 ## Future Development
-* Create profile pages that contain demographic information of the users and their previous activity.
-* Adding functionality for other users to comment on posts
-* Adding functionality for users to upload images alongside their posts.
-* Adding functionality for each individual user to sell via their profile.
+* Separate market place by categories.
+* Add a home page with limited time offers or "hot" products.
 
 ## Screenshots and Demo
 Login / Sign-Up
@@ -55,9 +52,6 @@ Marketplace
 
 Stripe
 ![image](./assets/stripe.jpg)
-
-Profile
-![image](./assets/Profile.jpg)
 
 Walkthrough Demo
 ![gif](./assets/demo.gif)

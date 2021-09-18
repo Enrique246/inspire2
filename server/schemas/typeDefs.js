@@ -67,7 +67,6 @@ const typeDefs = gql`
     addProduct(name: String!, description: String!, image:String!, price:String!, availability:String!,category: String!):Product
     addStock(products: [ID]!): Stock
     addCategory(name: String!): Category
-    updateProduct(_id: ID!, quantity: Int!): Product
     deleteUserProduct(_id: ID!):Product
     deleteProduct(_id: ID!):String
   }

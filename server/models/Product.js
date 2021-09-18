@@ -15,6 +15,11 @@ const productSchema = new Schema({
         required: true,
         min: 0.01,
     },
+    category:{
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true,
+    },
     availability: {
         type: Boolean,
         required: true,

@@ -1,168 +1,225 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { Profile, Product, Cart, Order, Post } = require("../models");
-const { signToken } = require("../utils/auth");
-const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+const { Profile, Product, Category, Order, Stock } = require('../models');
+const { signToken } = require('../utils/auth');
+const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
   Query: {
-    profiles: async () => {
-      return await Profile.find();
+    categories: async () => {
+      return await Category.find();
     },
-    
-    products: async (parent, { name }) => {
+    products: async (parent, { category, name }) => {
       const params = {};
+
+      if (category) {
+        params.category = category;
+      }
+
       if (name) {
         params.name = {
-          $regex: name,
+          $regex: name
         };
       }
-      return await Product.find({});
-    },
 
+      return await Product.find(params).populate('category');
+    },
+    product: async (parent, { _id }) => {
+      return await Product.findById(_id).populate('category');
+    },
+    profile: async (parent, args, context) => {
+      if (context.profile) {
+        const profile = await Profile.findById(context.profile._id).populate({
+          path: 'orders.products',
+          populate: 'category'
+        }).populate({
+          path: 'stock.products',
+          populate: 'category'
+        })
+
+        profile.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
+
+        return profile;
+      }
+
+      throw new AuthenticationError('Not logged in');
+    },
+    order: async (parent, { _id }, context) => {
+      if (context.profile) {
+        const profile = await Profile.findById(context.profile._id).populate({
+          path: 'orders.products',
+          populate: 'category'
+        });
+
+        return profile.orders.id(_id);
+      }
+
+      throw new AuthenticationError('Not logged in');
+    },
+    stock: async (parent, { _id }, context) => {
+      if (context.profile) {
+        const profile = await Profile.findById(context.profile._id).populate({
+          path: 'stock.products',
+          populate: 'category'
+        });
+
+        return profile.stock.id(_id);
+      }
+
+      throw new AuthenticationError('Not logged in');
+    },
     checkout: async (parent, args, context) => {
-      // console.log('context',context)
-      console.log('args',args)
       const url = new URL(context.headers.referer).origin;
-      console.log('pre product')
       const order = new Order({ products: args.products });
       const line_items = [];
-      console.log('order:',order)
-      const { products } = await order.populate("products").execPopulate();
-      console.log('post product:',products)
+
+      const { products } = await order.populate('products').execPopulate();
 
       for (let i = 0; i < products.length; i++) {
         const product = await stripe.products.create({
           name: products[i].name,
           description: products[i].description,
-          // images: [`${products[i].image}`],
+          images: [`${url}/images/${products[i].image}`]
         });
-
-        console.log('product:',product)
 
         const price = await stripe.prices.create({
           product: product.id,
-          unit_amount: products[i].price * 100,
-          currency: "usd",
+          unit_amount: parseInt(products[i].price)  * 100,
+          currency: 'usd',
         });
-
-        console.log('price:',price)
 
         line_items.push({
           price: price.id,
-          quantity: 1,
+          availability: 1
         });
       }
-
-      console.log('line_items:',line_items)
-
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
+        payment_method_types: ['card'],
         line_items,
-        mode: "payment",
-        // success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
-        success_url: `${url}/success`,
-        cancel_url: `${url}/`,
+        mode: 'payment',
+        success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${url}/`
       });
-      console.log('session.id:',session.id)
-      return { session:session.id}
-    },
 
-    cart: async (parent, { _id }, context) => {
-      if (context.profile) {
-        const profile = await profile.findById(context.user._id).populate({
-          path: "carts.products",
-          populate: "name",
-        });
-
-        return profile.carts.id(_id);
-      }
-    },
-    // throw new AuthenticationError("Not logged in");
-    profile: async (parent, { profileId }) => {
-      return await Profile.findOne({ _id: profileId });
-    },
-
-    posts: async () => {
-      return await Post.find().populate("comments");
-    },
-
-    post: async (parent, { _id }) => {
-      return await Post.findById(_id).populate("comments");
+      return { session: session.id };
     }
   },
 
   Mutation: {
-    // addOrder: async (parent, { products }, context) => {
-    //   console.log(context);
-    //   if (context.profile) {
-    //     const cart = new Cart({ products });
-    //     await Profile.findByIdAndUpdate(context.user._id, {
-    //       $push: { carts: cart },
-    //     });
-    //     return order;
-    //   }
-
-    //   throw new AuthenticationError("Not logged in");
-    // },
-
-    updateProduct: async (parent, { _id, availability }) => {
-      // const decrement = Math.abs(quantity) * -1;
-      return await Product.findByIdAndUpdate(
-        _id,
-        { $inc: { availability: FALSE } },
-        { new: true }
-      );
-    },
-
     addProfile: async (parent, args) => {
-      const user = await Profile.create(args);
-      const token = signToken(user);
+      const profile = await Profile.create(args);
+      const token = signToken(profile);
 
-      return { token, user };
+      return { token, profile };
     },
 
     login: async (parent, { email, password }) => {
-      const user = await Profile.findOne({ email });
+      const profile = await Profile.findOne({ email });
 
-      if (!user) {
+      if (!profile) {
         throw new AuthenticationError('Incorrect credentials');
       }
 
-      const correctPw = await user.isCorrectPassword(password);
+      const correctPw = await profile.isCorrectPassword(password);
 
       if (!correctPw) {
         throw new AuthenticationError('Incorrect credentials');
       }
 
-      const token = signToken(user);
+      const token = signToken(profile);
 
-      return { token, user };
+      return { token, profile };
     },
+    addOrder: async (parent, { products }, context) => {
+      console.log(context);
+      if (context.profile) {
+        const order = new Order({ products });
 
-    addPost: async(parent, args) => {
-      const post = await Post.create(args);
-      return post
+        await Profile.findByIdAndUpdate(context.profile._id, { $push: { orders: order } });
+
+        return order;
+      }
+
+      throw new AuthenticationError('Not logged in');
     },
+    addStock: async (parent, { products }, context) => {
+      console.log(context);
+      if (context.profile) {
+        const stock = new Stock({ products });
 
-    addComment: async(parent, args) => {
-      const post = await Post.findById(args.postId);
-      const comment = await Comment.create(args.text);
-      const newComment = [...post.comments, comment];
-      return await Post.findByIdAndUpdate(args.postId, {
-        comments: newComment
-      })
+        await Profile.findByIdAndUpdate(context.profile._id, { $push: { stock: stock } });
+
+        return stock;
+      }
+
+      throw new AuthenticationError('Not logged in');
     },
+    addProduct: async(parent,args, context) => {
+      console.log(context);
+      if(context){
+        /* const product = new Product(args); */
+        const product =await Product.create(args);
+        await Profile.findByIdAndUpdate(context.profile._id, { $push: { products: product , stock:{products: product}  }});
 
-    updatePost: async(parent, { _id, picture, description }) => {
-      return await Post.findByIdAndUpdate(_id, {
-        picture: picture,
-        descrption: description
-      })
+        return product;
+
+      }
+
+      throw new AuthenticationError('Not logged in');
     },
+    deleteUserProduct: async(parent,{_id}, context) => {
+         
+      if(context){
+       const product =await Product.findById(_id);
+        console.log(product);
+        await Profile.findByIdAndUpdate(context.profile._id, { $pull: {  stock:{products: product}  }});
+        return product
+      }
 
-    deletePost: async (parent, { _id }) => {
-      return await Post.findOneAndDelete({ _id: _id });
-    }
+      throw new AuthenticationError('Not logged in');
+    },
+    deleteProduct: async(parent,{_id}, context) => {
+         
+      if(context){
+        const product =await Product.findById(_id);
+        
+        await Profile.findByIdAndUpdate(context.profile._id, { $pull: {  stock:{products: product}  }});
+        await Product.deleteOne(product)
+       
+        return "Deleted"
+      
+      }
+
+      throw new AuthenticationError('Not logged in');
+    },
+    updateUser: async (parent, args, context) => {
+      if (context.profile) {
+        return await Profile.findByIdAndUpdate(context.profile._id, args, { new: true });
+      }
+
+      throw new AuthenticationError('Not logged in');
+    },
+    updateProduct: async (parent, { _id, availability }) => {
+      const decrement = Math.abs(availability) * -1;
+
+      return await Product.findByIdAndUpdate(_id, { $inc: { availability: decrement } }, { new: true });
+    },
+    updateQuantityProduct: async (parent, { _id, availability }) => {
+      const decrement = Math.abs(availability) -1;
+
+      return await Product.findByIdAndUpdate(_id, {availability: decrement}, { new: true });
+    },
+    addCategory: async (parent, args,context) => {
+      console.log(context);
+      if (context.profile) {
+        const category = await Category.create(args);
+
+        await Profile.findByIdAndUpdate(context.profile._id, { $push: { categories: category } });
+
+        return category;
+      }
+      throw new AuthenticationError('Not logged in');
+    }, 
+      
   },
 };
 

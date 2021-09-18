@@ -1,22 +1,34 @@
-const { gql } = require("apollo-server-express");
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  type Category {
+  _id: ID
+  name: String
+  } 
+
   type Product {
-    _id: ID
-    name: String
-    description: String
-    price: Float
-    availability: Boolean
-    image: String
+  _id: ID
+  name: String
+  description: String
+  image: String
+  availability: String
+  price: String
+  category: Category
   }
-  type Checkout {
-    session: ID
+
+  type Order {
+  _id: ID
+  purchaseDate: String
+  products: [Product]
+  orders: [Order]
+  stock: [Stock]
   }
-  type Cart {
-    _id: ID
-    total: Float
-    products: [Product]
+
+  type Stock {
+  _id: ID
+  products: [Product]
   }
+
   type Profile {
     _id: ID
     firstName: String
@@ -24,39 +36,40 @@ const typeDefs = gql`
     email: String
     password: String
   }
+
+  type Checkout {
+  session: ID
+  }
+
   type Auth {
     token: ID
     user: Profile
   }
-  type Comment {
-    _id: ID
-    text: String
-  }
-  type Post {
-    _id: ID
-    picture: String
-    description: String
-    comments: [Comment]
-  }
+
   type Query {
-    products(name: String): [Product]
+    categories: [Category]
+    products(category: ID, name: String): [Product]
+    allproducts: [Product]
     product(_id: ID!): Product
-    cart(_id: ID!): Cart
+    order(_id: ID!): Order
+    stock(_id: ID!): Stock
     checkout(products: [ID]!): Checkout
     profiles: [Profile]
     profile(profileId: ID!): Profile
-    posts: [Post]
-    post(postId: ID!): Post
   }
   type Mutation {
-    addCart(products: [ID]!): Cart
-    updateProduct(_id: ID!, price: Float!): Product
     addProfile(firstName: String!, lastName: String!, email: String!, password: String!): Auth
+    updateUser(firstName: String, lastName: String, email: String, password: String): Profile
     login(email: String!, password: String!): Auth
-    addPost(picture: String, description: String!): Post
-    addComment(text: String, postId: ID!): Post
-    updatePost(_id: ID!, picture: String, description: String): Post
-    deletePost(_id: ID!): Post
+    addOrder(products: [ID]!): Order
+    updateProduct(_id: ID!, availability: Int!): Product
+    updateQuantityProduct(_id: ID!, availability: Int!): Product
+    addProduct(name: String!, description: String!, image:String!, price:String!, availability:String!,category: String!):Product
+    addStock(products: [ID]!): Stock
+    addCategory(name: String!): Category
+    updateProduct(_id: ID!, quantity: Int!): Product
+    deleteUserProduct(_id: ID!):Product
+    deleteProduct(_id: ID!):String
   }
 `;
 

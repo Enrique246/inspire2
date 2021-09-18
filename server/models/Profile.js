@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const Cart = require('./Cart');
 const bcrypt = require('bcrypt');
 
 const profileSchema = new Schema({
@@ -22,8 +21,7 @@ const profileSchema = new Schema({
     type: String,
     required: true,
     minlength: 5
-  },
-  cart: [Cart.schema]
+  }
 });
 
 // set up pre-save middleware to create password

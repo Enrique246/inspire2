@@ -220,7 +220,7 @@ const resolvers = {
       throw new AuthenticationError('Not logged in');
     }, 
       
-  },
+  }
 };
 
 module.exports = resolvers;

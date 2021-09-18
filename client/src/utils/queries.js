@@ -8,6 +8,7 @@ export const QUERY_PRODUCTS = gql`
             description
             price
             availability
+            category
             image
         } 
     }

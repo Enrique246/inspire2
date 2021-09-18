@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { Grid, Transition } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
 import "./styles.css";
-import Axios from 'axios'
+import Axios from "axios"
 import { useMutation } from "@apollo/react-hooks";
 import { ADD_PRODUCT } from '../utils/mutations';
 import { QUERY_PRODUCTS} from '../utils/queries';
@@ -54,10 +54,10 @@ function Home() {
             console.log(seturlCloud);
 
 
-            /*    setFormState({
-                ...formState,
-                image: url,
-               }); */
+            // /*    setFormState({
+            //     ...formState,
+            //     image: url,
+            //    }); */
               })
             }
   const handleChange = (event) => {
@@ -84,17 +84,18 @@ function Home() {
             {/* <Link to="/myProducts">← Go your products</Link> */}
             <div>
                 <h2>Add New Product</h2>
-                <button className="btn waves-effect waves-light #ffb300 amber darken-1" onClick={uploadImage} >Upload Photo</button> 
+                {/* onClick={uploadImage} */}
+                <button className="btn waves-effect waves-light #ffb300 amber darken-1"onClick={uploadImage} >Upload Photo</button> 
             </div>
             <div className="input-field">
-                <form  >
+                <form onSubmit={handleFormSubmit}>
                 {/* onSubmit={handleFormSubmit} */}
                     <label htmlFor="image"></label>
                     <input
                         name="image"
                         type="file"
                         id="image"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                     />
                     <label htmlFor="name"></label>
                     <input
@@ -102,7 +103,7 @@ function Home() {
                         name="name"
                         // type="firstName"
                         id="name"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                     />
                     <label htmlFor="description"></label>
                     <input
@@ -110,7 +111,7 @@ function Home() {
                         name="description"
                         // type="lastName"
                         id="description"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                     />
                     <label htmlFor="quantity"></label>
                     <input
@@ -119,7 +120,7 @@ function Home() {
                         type="number"
                         id="quantity"
                         min="0"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                     />
                     <label htmlFor="price"></label>
                     <input
@@ -129,17 +130,17 @@ function Home() {
                         id="description"
                         min="0"
                         step="0.01"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                     />
                     <label htmlFor="category" ></label>
                     <select name="category" className="browser-default" defaultValue >
                       {/* onChange={handleChange} */}
                         <option value="DEFAULT">Choose your category</option>
-                        {/* {data.categories.map(category => (
+                        {data.categories.map(category => (
                             <option key={category._id} value={category._id}>
                                 {category.name}
                             </option>
-                        ))} */}
+                        ))}
                     </select>
                     <br></br>
                     <br></br>

@@ -31,7 +31,7 @@ db.once("open", async () => {
         price: 18800,
         category: categories[0]._id,
         availability: true,
-        image: "prado.jpg",
+        image: "/images/toyota-prado.jpg",
         },
         {
         name: "Toyota RAV4",
@@ -39,7 +39,7 @@ db.once("open", async () => {
         price: 19800,
         category: categories[0]._id,
         availability: true,
-        image: "rav4.jpg",
+        image: "/images/toyota-rav4.jpg",
         },
         {
         name: "Toyota Corolla",
@@ -47,7 +47,7 @@ db.once("open", async () => {
         price: 11800,
         category: categories[1]._id,
         availability: true,
-        image: "corolla.jpg",
+        image: "/images/toyota-corolla.jpg",
         },
         {
         name: "Toyota Land Cruiser",
@@ -55,7 +55,7 @@ db.once("open", async () => {
         price: 20900,
         category: categories[0]._id,
         availability: true,
-        image: "land-cruiser.jpg",
+        image: "/images/toyota-cruiser.jpg",
         },
         {
         name: "Toyota Hilux",
@@ -63,7 +63,7 @@ db.once("open", async () => {
         price: 34500,
         category: categories[2]._id,
         availability: true,
-        image: "hilux.jpg",
+        image: "/images/toyota-hilux.jpg",
         },
         {
         name: "Toyota Tundra",
@@ -71,7 +71,7 @@ db.once("open", async () => {
         price: 16900,
         category: categories[2]._id,
         availability: true,
-        image: "tundra.jpg",
+        image: "/images/toyota-tundra.jpg",
         },
     ]);
 

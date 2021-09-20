@@ -39,6 +39,7 @@ To install the necessary packages, open the terminal and run `npm install`. To d
 ## Future Development
 * Separate market place by categories.
 * Add a home page with limited time offers or "hot" products.
+* Add a withlist section.
 
 ## Screenshots and Demo
 Login / Sign-Up

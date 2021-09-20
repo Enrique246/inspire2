@@ -8,7 +8,7 @@ import { useLazyQuery } from "@apollo/client";
 import { QUERY_MARKETPOSTS } from "../utils/MarketPlaceQueries";
 import { QUERY_CHECKOUT } from "../utils/MarketPlaceQueries";
 import { useCartContext } from "../utils/CartContext";
-import Auth from "../utils/auth";
+import Auth from "../utils/AuthRoute";
 
 const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
 

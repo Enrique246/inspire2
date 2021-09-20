@@ -33,5 +33,10 @@ class AuthService {
     // this will reload the page and reset the state of the application
     window.location.assign('/');
   }
+
+  addProduct() {
+    
+    window.location.assign('/main');
+  }
 }
 export default new AuthService();

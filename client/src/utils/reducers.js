@@ -4,7 +4,6 @@ import {
   REMOVE_FROM_CART,
   CLEAR_CART,
   TOGGLE_CART,
-  ADD_PRODUCT,
 } from "./actions";
 
 const initialState = {

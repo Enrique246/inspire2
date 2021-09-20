@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import { Grid, Transition } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
 import "./styles.css";
 import Axios from "axios"
